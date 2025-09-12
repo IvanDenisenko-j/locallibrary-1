@@ -1,0 +1,44 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Название: {{ book.title }}</h1>
+
+<p><strong>Автор:</strong> <a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></p>
+<p><strong>Краткое описание:</strong> {{ book.summary }}</p>
+<p><strong>ISBN:</strong> {{ book.isbn }}</p>
+<p><strong>Язык:</strong> {{ book.language }}</p>
+<p><strong>Жанр:</strong> {{ book.genre.all|join:", " }}</p>
+
+<div>
+<h4>Копии</h4>
+
+{% for copy in book.bookinstance_set.all %}
+  <hr>
+  <p>{{ copy.get_status_display }}</p>
+  {% if copy.status != 'a' %}<p><strong>К возврату подлежат:</strong> {{copy.due_back}}</p>{% endif %}
+    <p><strong>Выходные данные:</strong> {{copy.imprint}}</p>
+  <p class="text-muted"><strong>Id:</strong> <a href="{{ copy.get_absolute_url }}">{{copy.id}}</a></p>
+{% empty %}
+  <p>В библиотеке нету копий</p>
+{% endfor %}
+</div>
+{% endblock %}
+
+
+{% block sidebar %}
+  {{ block.super }}
+
+
+  <hr>
+  <ul >
+
+      <li><a href="{% url 'book-update' book.id %}">Редактировать книгу</a></li>
+
+
+      <li><a href="{% url 'book-delete' book.id %}">Удалить книгу</a></li>
+
+    </ul>
+
+
+{% endblock %}
