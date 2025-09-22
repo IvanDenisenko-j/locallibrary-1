@@ -47,7 +47,6 @@ class Book(models.Model):
     # Создавать как строку, а не как объект, поскольку он еще не объявлен в файле.
     summary = models.TextField(max_length=1000, help_text="Введите краткое описание книги")
     isbn = models.CharField('ISBN', max_length=13, help_text='13 characters <a href="https://www.isbn-international.org/content/what-isbn">ISBN номер</a>')
-
     genre = models.ManyToManyField(Genre, help_text="Выберите жанр этой книги")
     # ManyToManyField используется, поскольку жанр может содержать множество книг. Книги могут охватывать многие жанры.
     # Класс жанра уже определен, поэтому мы можем указать объект выше.
