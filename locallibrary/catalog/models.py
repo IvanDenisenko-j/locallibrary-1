@@ -53,8 +53,8 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre, help_text="Выберите жанр этой книги")
     # ManyToManyField используется, поскольку жанр может содержать множество книг. Книги могут охватывать многие жанры.
     # Класс жанра уже определен, поэтому мы можем указать объект выше.
-    language = models.ForeignKey(
-        'Language', on_delete=models.SET_NULL, null=True)
+    language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
+    data_added = models.DateField(auto_now_add=True)
 
     def __str__(self):
         """
