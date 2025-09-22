@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 import uuid # Требуется для уникальных экземпляров книг
-
+from django.core.exceptions import ValidationError
 # Create your models here.
 class Genre(models.Model):
     """
@@ -43,6 +43,7 @@ class Book(models.Model):
     """
     title = models.CharField(max_length=200)
     author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
+    data_added = models.DateField(null=True, blank=True)
     # Используется внешний ключ, поскольку у книги может быть только один автор, но у авторов может быть несколько книг.
 
     # Создавать как строку, а не как объект, поскольку он еще не объявлен в файле.
@@ -54,7 +55,7 @@ class Book(models.Model):
     # ManyToManyField используется, поскольку жанр может содержать множество книг. Книги могут охватывать многие жанры.
     # Класс жанра уже определен, поэтому мы можем указать объект выше.
     language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
-    data_added = models.DateField(auto_now_add=True)
+
 
     def __str__(self):
         """
@@ -74,6 +75,13 @@ class Book(models.Model):
         Создает строку для жанра. Это необходимо для отображения жанра в администраторе.
         """
         return ', '.join([genre.name for genre in self.genre.all()[:3]])
+
+    def clean(self):
+        if self.author:
+            if hasattr(self.author, 'date_of_birth') and self.author.date_of_birth:
+                # Используем текущую дату для проверки
+                if self.data_added < self.author.date_of_birth:
+                    raise ValidationError('Автор еще не родился - нельзя добавить книгу')
 
     display_genre.short_description = 'Genre'
 

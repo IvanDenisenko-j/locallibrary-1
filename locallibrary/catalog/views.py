@@ -11,7 +11,7 @@ from .forms import RenewBookForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
-
+from django.http import Http404
 
 
 # Create your views here.
@@ -163,24 +163,11 @@ class AuthorDelete(PermissionRequiredMixin, DeleteView):
 
 class BookCreate(PermissionRequiredMixin, CreateView):
     model = Book
-<<<<<<< HEAD
+
     fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language', 'data_added']
     permission_required = 'catalog.add_book'
 
-    def form_valid(self, form):
-        author = form.cleaned_data['author']
-        data = form.cleaned_data['data_added']
 
-        if author.date_of_death > data:
-            form.error('data_added', 'Книга не может быть создана раньше рождения автора')
-
-        return super().form_valid(form)
-
-=======
-    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
-    permission_required = 'catalog.add_book'
-
->>>>>>> e453fbd4bc03ca58b9ee301e03fd3d17f9766b04
 
 class BookUpdate(PermissionRequiredMixin, UpdateView):
     model = Book
