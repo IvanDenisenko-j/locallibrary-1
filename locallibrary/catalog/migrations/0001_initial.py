@@ -69,7 +69,12 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200, unique=True)),
             ],
             options={
-                'constraints': [models.UniqueConstraint(django.db.models.functions.text.Lower('name'), name='language_name_case_insensitive_unique', violation_error_message='Language already exists (case insensitive match)')],
+                'constraints': [
+    models.UniqueConstraint(
+        fields=['name'],
+        name='language_name_case_insensitive_unique'
+    )
+],
             },
         ),
         migrations.AddField(

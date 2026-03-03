@@ -32,9 +32,8 @@ class Language(models.Model):
     class Meta:
         constraints = [
             UniqueConstraint(
-                Lower('name'),
-                name='language_name_case_insensitive_unique',
-                violation_error_message="Language already exists (case insensitive match)"
+                fields=['name'],  # В Django 3.2 используем список полей
+                name='language_name_case_insensitive_unique'
             ),
         ]
 
